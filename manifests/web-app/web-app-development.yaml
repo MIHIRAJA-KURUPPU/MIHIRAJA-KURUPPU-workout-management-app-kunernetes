@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-app
+  namespace: workout-app-ns
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: web-app
@@ -21,7 +22,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: app-secret
                   key: DATABASE_URL
           volumeMounts:
             - name: image-storage
