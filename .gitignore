@@ -8,7 +8,7 @@
 *.json
 
 # Ignore secret Kubernetes YAML files
-postgres/postgres-secret.yaml
+manifests/postgres/postgres-secret.yaml
 
 # Ignore compiled output or temporary files
 *.out
