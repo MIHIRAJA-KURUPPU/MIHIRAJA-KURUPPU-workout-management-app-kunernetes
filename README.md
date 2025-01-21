@@ -239,7 +239,7 @@ kubectl apply -f manifests/web-app/web-app-deployment.yaml
   ```
 
 ---
-## Step 8: # Viewing Uploaded Images in the Pod
+## Step 8: Viewing Uploaded Images in the Pod
 
 Follow these steps to log into the pod, navigate to the `static/uploads/` directory, and view the files:
 The pod must be running in your cluster.
@@ -301,9 +301,7 @@ Paths:
 
 ---
 
-## Directory Structure
-
-The project is organized as follows:
+```bash
 kubernetes-postgres-webapp/
 ├── README.md                     # Documentation for the project
 ├── manifests/                    # Kubernetes YAML files
@@ -318,12 +316,12 @@ kubernetes-postgres-webapp/
 │   │   └── image-storage-pvc.yaml # Persistent Volume Claim for image storage
 │   ├── web-app/                  # Resources for the web application
 │   │   ├── web-app-service.yaml  # Service for the web application
-│   │   └── web-app-deployment.yaml # Deployment for the web application
-│   │   ├── web-app-secret.yaml   # Secret configuration for web-app
+│   │   ├── web-app-deployment.yaml # Deployment for the web application
+│   │   ├── web-app-secret.yaml   # Secret configuration for the web application
 │   └── namespaces/               # Namespace-related resources
 │       └── namespace.yaml        # Namespace configuration
 ├── scripts/                      # Utility scripts
 │   ├── encode-secrets.sh         # Script to encode secrets to base64
 │   └── setup-database.sh         # Script to initialize the database
 └── .gitignore                    # Git ignore file to exclude unwanted files
-
+```
