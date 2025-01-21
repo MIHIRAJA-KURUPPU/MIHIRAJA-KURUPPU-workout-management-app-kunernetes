@@ -173,10 +173,48 @@ kubectl apply -f manifests/web-app/web-app-development.yaml
   ```
 
 ---
+## Step 7: # Viewing Uploaded Images in the Pod
 
+Follow these steps to log into the pod, navigate to the `static/uploads/` directory, and view the files:
+The pod must be running in your cluster.
 
+Run the following command to get a list of pods:
+```bash
+kubectl get pods
+```
+Note down the name of the pod you want to access.
 
-## Step 7: Volume Mounts
+Log Into the Pod
+Use the kubectl exec command to open a shell inside the pod:
+
+```bash
+kubectl exec -it <pod-name> -- /bin/bash
+```
+
+Replace <pod-name> with the actual name of your pod.
+
+Navigate to the Directory
+Once inside the pod, navigate to the directory where images are stored:
+
+``` bash
+cd /path/to/static/uploads/
+```
+Replace /path/to with the correct path to the static/uploads/ directory in your pod.
+
+For example:
+
+``` bash
+cd /static/uploads/
+```
+
+List the Files
+To view the list of uploaded images, run:
+
+```bash
+ls -l
+```
+
+## Step 8: Volume Mounts
 
 Verify volume mounts in Minikube:
 ```bash
