@@ -43,7 +43,7 @@ The repository includes the following YAML files:
 - `postgres-service.yaml`
 - `postgres-deployment.yaml`
 - `web-app-service.yaml`
-- `web-app-deployment.yaml`
+- `web-app-development.yaml`
 
 ### Edit your `postgres-secret.yaml`
 ```yaml
@@ -101,7 +101,7 @@ kubectl apply -f manifests/storage/image-storage-pvc.yaml
 
 # Apply web app related files
 kubectl apply -f manifests/web-app/web-app-service.yaml
-kubectl apply -f manifests/web-app/web-app-deployment.yaml
+kubectl apply -f manifests/web-app/web-app-development.yaml
 ```
 
 
