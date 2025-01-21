@@ -1,1 +1,151 @@
-# MIHIRAJA-KURUPPU-workout-management-app-kunernetes
+# Setting Up Minikube with PostgreSQL and Web Application
+
+This guide provides instructions for setting up a Kubernetes cluster using Minikube, deploying PostgreSQL with persistent storage, and workout management web application.
+
+---
+
+## Prerequisites
+
+- **Minikube**: Ensure Minikube is installed. Follow the [official documentation](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download) to set it up.
+- **kubectl**: Configure an alias for convenience:
+  ```bash
+  alias kubectl="minikube kubectl --"
+  ```
+
+---
+
+## Step 1: Start Minikube
+
+Start your Minikube cluster:
+```bash
+minikube start
+```
+
+To access the Minikube VM, use:
+```bash
+minikube ssh
+```
+Switch to root inside the VM:
+```bash
+sudo su -
+```
+
+---
+
+## Step 2: Kubernetes YAML Files
+
+Include the following YAML files in your repository:
+- `image-storage-pv.yaml`
+- `image-storage-pvc.yaml`
+- `postgres-pv.yaml`
+- `postgres-pvc.yaml`
+- `postgres-secret.yaml`
+- `postgres-service.yaml`
+- `postgres-deployment.yaml`
+- `web-app-service.yaml`
+- `web-app-deployment.yaml`
+
+### Edit your `postgres-secret.yaml`
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+type: opaque
+data:
+  POSTGRES_USER: <base64-encoded-username>
+  POSTGRES_PASSWORD: <base64-encoded-password>
+  POSTGRES_DB: <base64-encoded-database-name>
+  DATABASE_URL: <base64-encoded-database-url>
+```
+#### Generating Base64 Encoded Credentials
+Generate credentials using:
+```bash
+echo -n "<value>" | base64
+```
+Replace `<value>` with your desired credential.
+
+---
+
+## Step 3: Apply Kubernetes Configurations
+
+Apply all YAML files:
+```bash
+kubectl apply -f <filename>.yaml
+```
+Verify resources:
+- Persistent Volumes (PVs):
+  ```bash
+  kubectl get pv
+  ```
+- Persistent Volume Claims (PVCs):
+  ```bash
+  kubectl get pvc
+  ```
+- Services:
+  ```bash
+  kubectl get svc
+  ```
+- Deployments:
+  ```bash
+  kubectl get deployment
+  ```
+- Pods:
+  ```bash
+  kubectl get pods
+  ```
+
+---
+
+## Step 4: Initialize PostgreSQL
+
+### Access the PostgreSQL Pod
+Find the PostgreSQL pod name:
+```bash
+kubectl get pods
+```
+Access the pod:
+```bash
+kubectl exec -it postgres-deployment-<pod-id> -- bash
+```
+
+### Interact with PostgreSQL
+Inside the pod, use the `psql` client:
+```bash
+psql -U postgres
+```
+
+List all databases:
+```sql
+\l
+```
+
+Create the `workout` database:
+```sql
+CREATE DATABASE workout;
+```
+
+---
+
+## Step 5: Volume Mounts
+
+Verify volume mounts in Minikube:
+```bash
+minikube ssh
+sudo su -
+```
+Paths:
+- **PostgreSQL Data**: `/mnt/data/postgres`
+- **Uploaded Images**: `/mnt/data/uploads`
+
+---
+
+## Notes
+
+- The `postgres-deployment` uses one replica to simplify database interactions.
+- Replace placeholder values (e.g., `<base64-encoded-username>`) with actual credentials.
+- YAML configurations must match your desired resource requirements.
+
+---
+
+
