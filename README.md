@@ -139,7 +139,7 @@ kubectl get pods
 ```
 Access the pod:
 ```bash
-kubectl exec -it postgres-deployment-<pod-id> -- bash
+kubectl exec -it postgres-deployment-<pod-id> -- /bin/bash
 ```
 
 ### Interact with PostgreSQL
