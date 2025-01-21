@@ -43,7 +43,8 @@ The repository includes the following YAML files:
 - `postgres-service.yaml`
 - `postgres-deployment.yaml`
 - `web-app-service.yaml`
-- `web-app-development.yaml`
+- `web-app-deployment.yaml`
+-  web-app-secret.yaml
 
 ### Edit your `postgres-secret.yaml`
 ```yaml
@@ -55,9 +56,19 @@ type: opaque
 data:
   POSTGRES_USER: <base64-encoded-username>
   POSTGRES_PASSWORD: <base64-encoded-password>
-  POSTGRES_DB: <base64-encoded-database-name>
+```
+
+### Edit your `web-app-secret.yaml`
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: web-app-secret
+type: opaque
+data:
   DATABASE_URL: <base64-encoded-database-url>
 ```
+
 #### Generating Base64 Encoded Credentials
 Generate credentials using:
 ```bash
@@ -77,8 +88,30 @@ Encode Secrets: If you're using the encode-secrets.sh script to encode secrets f
 This will output the base64-encoded secret that you can use in your postgres-secret.yaml.
 
 
+## Step 3: Setting Up the Namespace
 
-## Step 3: Apply Kubernetes Configurations for postgresql database 
+To create and set up the namespace for the application, follow these steps:
+
+**Create the Namespace**:
+   Apply the namespace manifest file to create the `workout-app-ns` namespace. Run the following command:
+  ```bash
+ kubectl apply -f manifests/namespace/workout-app-ns.yaml
+ ```
+This command creates the workout-app-ns namespace as defined in the manifest file.
+
+Set the Current Context Namespace: Configure your Kubernetes context to use the workout-app-ns namespace by default. Run:
+```bash
+kubectl config set-context --current --namespace=workout-app-ns
+ ```
+
+This command updates your current Kubernetes context to use the newly created namespace, ensuring all subsequent kubectl commands target this namespace by default. To verify the setup, you can check the current context and list all namespaces:
+
+ ``` bash
+kubectl config view --minify | grep namespace
+ ```
+
+
+## Step 4: Apply Kubernetes Configurations for postgresql database 
 
 Apply all YAML files:
 ```bash
@@ -96,7 +129,7 @@ kubectl apply -f manifests/postgres/postgres-service.yaml
 kubectl apply -f manifests/postgres/postgres-deployment.yaml
 ```
 
-## Step 4: Initialize PostgreSQL
+## Step 5: Initialize PostgreSQL
 
 ### Access the PostgreSQL Pod
 Find the PostgreSQL pod name:
@@ -168,7 +201,7 @@ Setup Database: To initialize the database using setup-database.sh, simply run t
 
 This script will connect to your running PostgreSQL pod and create the necessary database (e.g., workout) for your application.
 
-## Step 5: Apply Kubernetes Configurations for web application
+## Step 6: Apply Kubernetes Configurations for web application
 
 
 ```bash
@@ -178,12 +211,12 @@ kubectl apply -f manifests/storage/image-storage-pvc.yaml
 
 # Apply web app related files
 kubectl apply -f manifests/web-app/web-app-service.yaml
-kubectl apply -f manifests/web-app/web-app-development.yaml
+kubectl apply -f manifests/web-app/web-app-deployment.yaml
 ```
 
 
 
-## Step 6: Verify resources
+## Step 7: Verify resources
 - Persistent Volumes (PVs):
   ```bash
   kubectl get pv
@@ -206,7 +239,7 @@ kubectl apply -f manifests/web-app/web-app-development.yaml
   ```
 
 ---
-## Step 7: # Viewing Uploaded Images in the Pod
+## Step 8: Viewing Uploaded Images in the Pod
 
 Follow these steps to log into the pod, navigate to the `static/uploads/` directory, and view the files:
 The pod must be running in your cluster.
@@ -247,7 +280,7 @@ To view the list of uploaded images, run:
 ls -l
 ```
 
-## Step 8: Volume Mounts
+## Step 9: Volume Mounts
 
 Verify volume mounts in Minikube:
 ```bash
@@ -268,4 +301,27 @@ Paths:
 
 ---
 
-
+```bash
+kubernetes-postgres-webapp/
+├── README.md                     # Documentation for the project
+├── manifests/                    # Kubernetes YAML files
+│   ├── postgres/                 # Resources for PostgreSQL
+│   │   ├── postgres-pv.yaml      # Persistent Volume for PostgreSQL
+│   │   ├── postgres-pvc.yaml     # Persistent Volume Claim for PostgreSQL
+│   │   ├── postgres-secret.yaml  # Secret configuration for PostgreSQL
+│   │   ├── postgres-service.yaml # Service for PostgreSQL
+│   │   └── postgres-deployment.yaml  # Deployment for PostgreSQL
+│   ├── storage/                  # Storage-related resources
+│   │   ├── image-storage-pv.yaml # Persistent Volume for image storage
+│   │   └── image-storage-pvc.yaml # Persistent Volume Claim for image storage
+│   ├── web-app/                  # Resources for the web application
+│   │   ├── web-app-service.yaml  # Service for the web application
+│   │   ├── web-app-deployment.yaml # Deployment for the web application
+│   │   ├── web-app-secret.yaml   # Secret configuration for the web application
+│   └── namespaces/               # Namespace-related resources
+│       └── namespace.yaml        # Namespace configuration
+├── scripts/                      # Utility scripts
+│   ├── encode-secrets.sh         # Script to encode secrets to base64
+│   └── setup-database.sh         # Script to initialize the database
+└── .gitignore                    # Git ignore file to exclude unwanted files
+```
