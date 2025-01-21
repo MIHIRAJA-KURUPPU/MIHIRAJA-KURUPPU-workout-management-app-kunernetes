@@ -78,7 +78,7 @@ This will output the base64-encoded secret that you can use in your postgres-sec
 
 
 
-## Step 3: Apply Kubernetes Configurations
+## Step 3: Apply Kubernetes Configurations for postgresql database 
 
 Apply all YAML files:
 ```bash
@@ -94,41 +94,7 @@ kubectl apply -f manifests/postgres/postgres-pvc.yaml
 kubectl apply -f manifests/postgres/postgres-secret.yaml
 kubectl apply -f manifests/postgres/postgres-service.yaml
 kubectl apply -f manifests/postgres/postgres-deployment.yaml
-
-# Apply storage related files
-kubectl apply -f manifests/storage/image-storage-pv.yaml
-kubectl apply -f manifests/storage/image-storage-pvc.yaml
-
-# Apply web app related files
-kubectl apply -f manifests/web-app/web-app-service.yaml
-kubectl apply -f manifests/web-app/web-app-development.yaml
 ```
-
-
-
-Verify resources:
-- Persistent Volumes (PVs):
-  ```bash
-  kubectl get pv
-  ```
-- Persistent Volume Claims (PVCs):
-  ```bash
-  kubectl get pvc
-  ```
-- Services:
-  ```bash
-  kubectl get svc
-  ```
-- Deployments:
-  ```bash
-  kubectl get deployment
-  ```
-- Pods:
-  ```bash
-  kubectl get pods
-  ```
-
----
 
 ## Step 4: Initialize PostgreSQL
 
@@ -169,7 +135,48 @@ Setup Database: To initialize the database using setup-database.sh, simply run t
 
 This script will connect to your running PostgreSQL pod and create the necessary database (e.g., workout) for your application.
 
-## Step 5: Volume Mounts
+## Step 5: Apply Kubernetes Configurations for web application
+
+
+```bash
+# Apply storage related files
+kubectl apply -f manifests/storage/image-storage-pv.yaml
+kubectl apply -f manifests/storage/image-storage-pvc.yaml
+
+# Apply web app related files
+kubectl apply -f manifests/web-app/web-app-service.yaml
+kubectl apply -f manifests/web-app/web-app-development.yaml
+```
+
+
+
+## Step 6: Verify resources
+- Persistent Volumes (PVs):
+  ```bash
+  kubectl get pv
+  ```
+- Persistent Volume Claims (PVCs):
+  ```bash
+  kubectl get pvc
+  ```
+- Services:
+  ```bash
+  kubectl get svc
+  ```
+- Deployments:
+  ```bash
+  kubectl get deployment
+  ```
+- Pods:
+  ```bash
+  kubectl get pods
+  ```
+
+---
+
+
+
+## Step 7: Volume Mounts
 
 Verify volume mounts in Minikube:
 ```bash
