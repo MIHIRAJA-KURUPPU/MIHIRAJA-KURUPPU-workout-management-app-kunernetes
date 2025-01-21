@@ -40,6 +40,7 @@ The repository includes the following YAML files:
 - `postgres-pv.yaml`
 - `postgres-pvc.yaml`
 - `postgres-secret.yaml`
+- `postgres-configmap.yaml`
 - `postgres-service.yaml`
 - `postgres-deployment.yaml`
 - `web-app-service.yaml`
@@ -125,6 +126,7 @@ To apply the Kubernetes YAML files from the manifests/ directory, you can use th
 kubectl apply -f manifests/postgres/postgres-pv.yaml
 kubectl apply -f manifests/postgres/postgres-pvc.yaml
 kubectl apply -f manifests/postgres/postgres-secret.yaml
+kubectl apply -f manifests/postgres/postgres-configmap.yaml
 kubectl apply -f manifests/postgres/postgres-service.yaml
 kubectl apply -f manifests/postgres/postgres-deployment.yaml
 ```
@@ -309,6 +311,7 @@ kubernetes-postgres-webapp/
 │   │   ├── postgres-pv.yaml      # Persistent Volume for PostgreSQL
 │   │   ├── postgres-pvc.yaml     # Persistent Volume Claim for PostgreSQL
 │   │   ├── postgres-secret.yaml  # Secret configuration for PostgreSQL
+│   │   ├── postgres-configmap.yaml  # Configmap configuration for PostgreSQL
 │   │   ├── postgres-service.yaml # Service for PostgreSQL
 │   │   └── postgres-deployment.yaml  # Deployment for PostgreSQL
 │   ├── storage/                  # Storage-related resources
