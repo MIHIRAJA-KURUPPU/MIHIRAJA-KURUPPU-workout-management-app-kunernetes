@@ -119,10 +119,43 @@ List all databases:
 \l
 ```
 
-Create the `workout` database:
+#### Create the `workout` database:
 ```sql
 CREATE DATABASE workout;
 ```
+
+#### Connect to the Database
+Run the following command to connect to the `workout` database:
+```sql
+\c workout
+```
+
+#### View All Available Tables
+Once connected, list all tables in the database using:
+```sql
+\dt
+```
+
+#### View Records in a Table
+To view the records in a specific table (e.g., `exercise`), run:
+```sql
+SELECT * FROM exercise;
+```
+
+> Replace `exercise` with the desired table name.
+
+---
+
+#### Additional Notes
+- For detailed table structures, use:
+  ```sql
+  \d <table_name>
+  ```
+- To limit the number of records fetched, you can append a `LIMIT` clause to your query:
+  ```sql
+  SELECT * FROM exercise LIMIT 10;
+  ```
+- Use `\q` to exit the PostgreSQL command-line interface.
 
 ---
 
