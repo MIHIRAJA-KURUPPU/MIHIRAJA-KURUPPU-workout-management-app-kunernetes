@@ -1,0 +1,19 @@
+# Ignore sensitive or temporary files
+*.bak
+*.swp
+*.log
+
+# Ignore environment files or local configurations (e.g., for secrets)
+*.env
+*.json
+
+# Ignore secret Kubernetes YAML files
+postgres/postgres-secret.yaml
+
+# Ignore compiled output or temporary files
+*.out
+*.tmp
+
+# Ignore node_modules/ and dist/ if you're using frontend
+node_modules/
+dist/
