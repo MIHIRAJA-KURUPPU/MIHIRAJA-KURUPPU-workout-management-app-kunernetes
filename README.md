@@ -34,7 +34,7 @@ sudo su -
 
 ## Step 2: Kubernetes YAML Files
 
-Include the following YAML files in your repository:
+The repository includes the following YAML files:
 - `image-storage-pv.yaml`
 - `image-storage-pvc.yaml`
 - `postgres-pv.yaml`
