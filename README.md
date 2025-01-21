@@ -43,7 +43,7 @@ The repository includes the following YAML files:
 - `postgres-service.yaml`
 - `postgres-deployment.yaml`
 - `web-app-service.yaml`
-- `web-app-deployment.yaml`
+- `web-app-development.yaml`
 
 ### Edit your `postgres-secret.yaml`
 ```yaml
@@ -78,7 +78,7 @@ This will output the base64-encoded secret that you can use in your postgres-sec
 
 
 
-## Step 3: Apply Kubernetes Configurations
+## Step 3: Apply Kubernetes Configurations for postgresql database 
 
 Apply all YAML files:
 ```bash
@@ -94,19 +94,96 @@ kubectl apply -f manifests/postgres/postgres-pvc.yaml
 kubectl apply -f manifests/postgres/postgres-secret.yaml
 kubectl apply -f manifests/postgres/postgres-service.yaml
 kubectl apply -f manifests/postgres/postgres-deployment.yaml
+```
 
+## Step 4: Initialize PostgreSQL
+
+### Access the PostgreSQL Pod
+Find the PostgreSQL pod name:
+```bash
+kubectl get pods
+```
+Access the pod:
+```bash
+kubectl exec -it postgres-deployment-<pod-id> -- /bin/bash
+```
+
+### Interact with PostgreSQL
+Inside the pod, use the `psql` client:
+```bash
+psql -U postgres
+```
+
+List all databases:
+```sql
+\l
+```
+
+#### Create the `workout` database:
+```sql
+CREATE DATABASE workout;
+```
+
+#### Connect to the Database
+Run the following command to connect to the `workout` database:
+```sql
+\c workout
+```
+
+#### View All Available Tables
+Once connected, list all tables in the database using:
+```sql
+\dt
+```
+
+#### View Records in a Table
+To view the records in a specific table (e.g., `exercise`), run:
+```sql
+SELECT * FROM exercise;
+```
+
+> Replace `exercise` with the desired table name.
+
+---
+
+#### Additional Notes
+- For detailed table structures, use:
+  ```sql
+  \d <table_name>
+  ```
+- To limit the number of records fetched, you can append a `LIMIT` clause to your query:
+  ```sql
+  SELECT * FROM exercise LIMIT 10;
+  ```
+- Use `\q` to exit the PostgreSQL command-line interface.
+
+---
+
+You can also run the setup-database.sh script in the scripts/ directory, for setting up the database.
+Setup Database: To initialize the database using setup-database.sh, simply run the following command:
+
+```bash
+./scripts/setup-database.sh
+```
+
+This script will connect to your running PostgreSQL pod and create the necessary database (e.g., workout) for your application.
+
+## Step 5: Apply Kubernetes Configurations for web application
+
+
+```bash
 # Apply storage related files
 kubectl apply -f manifests/storage/image-storage-pv.yaml
 kubectl apply -f manifests/storage/image-storage-pvc.yaml
 
 # Apply web app related files
 kubectl apply -f manifests/web-app/web-app-service.yaml
-kubectl apply -f manifests/web-app/web-app-deployment.yaml
+kubectl apply -f manifests/web-app/web-app-development.yaml
 ```
 
 
 
-Verify resources:
+## Step 6: Verify resources
 - Persistent Volumes (PVs):
   ```bash
   kubectl get pv
@@ -129,47 +206,48 @@ Verify resources:
   ```
 
 ---
+## Step 7: # Viewing Uploaded Images in the Pod
 
-## Step 4: Initialize PostgreSQL
+Follow these steps to log into the pod, navigate to the `static/uploads/` directory, and view the files:
+The pod must be running in your cluster.
 
-### Access the PostgreSQL Pod
-Find the PostgreSQL pod name:
+Run the following command to get a list of pods:
 ```bash
 kubectl get pods
 ```
-Access the pod:
-```bash
-kubectl exec -it postgres-deployment-<pod-id> -- bash
-```
+Note down the name of the pod you want to access.
 
-### Interact with PostgreSQL
-Inside the pod, use the `psql` client:
-```bash
-psql -U postgres
-```
-
-List all databases:
-```sql
-\l
-```
-
-Create the `workout` database:
-```sql
-CREATE DATABASE workout;
-```
-
----
-
-You can also run the setup-database.sh script in the scripts/ directory, for setting up the database.
-Setup Database: To initialize the database using setup-database.sh, simply run the following command:
+Log Into the Pod
+Use the kubectl exec command to open a shell inside the pod:
 
 ```bash
-./scripts/setup-database.sh
+kubectl exec -it <pod-name> -- /bin/bash
 ```
 
-This script will connect to your running PostgreSQL pod and create the necessary database (e.g., workout) for your application.
+Replace <pod-name> with the actual name of your pod.
 
-## Step 5: Volume Mounts
+Navigate to the Directory
+Once inside the pod, navigate to the directory where images are stored:
+
+``` bash
+cd /path/to/static/uploads/
+```
+Replace /path/to with the correct path to the static/uploads/ directory in your pod.
+
+For example:
+
+``` bash
+cd /static/uploads/
+```
+
+List the Files
+To view the list of uploaded images, run:
+
+```bash
+ls -l
+```
+
+## Step 8: Volume Mounts
 
 Verify volume mounts in Minikube:
 ```bash
