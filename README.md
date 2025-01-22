@@ -40,6 +40,7 @@ The repository includes the following YAML files:
 - `postgres-pv.yaml`
 - `postgres-pvc.yaml`
 - `postgres-secret.yaml`
+- `postgres-configmap.yaml`
 - `postgres-service.yaml`
 - `postgres-deployment.yaml`
 - `web-app-service.yaml`
@@ -54,7 +55,6 @@ metadata:
   name: postgres-secret
 type: opaque
 data:
-  POSTGRES_USER: <base64-encoded-username>
   POSTGRES_PASSWORD: <base64-encoded-password>
 ```
 
@@ -68,6 +68,13 @@ type: opaque
 data:
   DATABASE_URL: <base64-encoded-database-url>
 ```
+
+DATABASE_URL should be in the following format:
+
+```yaml
+postgresql://<username>:<password>@postgres-db:5432/workout
+```
+
 
 #### Generating Base64 Encoded Credentials
 Generate credentials using:
@@ -125,6 +132,7 @@ To apply the Kubernetes YAML files from the manifests/ directory, you can use th
 kubectl apply -f manifests/postgres/postgres-pv.yaml
 kubectl apply -f manifests/postgres/postgres-pvc.yaml
 kubectl apply -f manifests/postgres/postgres-secret.yaml
+kubectl apply -f manifests/postgres/postgres-configmap.yaml
 kubectl apply -f manifests/postgres/postgres-service.yaml
 kubectl apply -f manifests/postgres/postgres-deployment.yaml
 ```
@@ -152,10 +160,19 @@ List all databases:
 \l
 ```
 
-#### Create the `workout` database:
+### Create the `workout` Database (Optional with the PostgreSQL Image Version)
+
 ```sql
 CREATE DATABASE workout;
 ```
+
+#### Additional Notes
+
+##### PostgreSQL 15:
+If you're using the `postgres:15` image, no manual database creation is required. The database will be automatically created based on the environment variables (`POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`) provided in the configuration.
+
+##### PostgreSQL 16.6:
+By default, the `postgres:16.6` image requires manual database creation. In PostgreSQL 16.6, the automatic database creation feature that existed in earlier versions (like `postgres:15`) is no longer enabled by default. This means that, unlike previous versions, the database specified by the `POSTGRES_DB` environment variable won't be created automatically. To handle this, you need to manually create the database by running the SQL command after the container starts.
 
 #### Connect to the Database
 Run the following command to connect to the `workout` database:
@@ -309,6 +326,7 @@ kubernetes-postgres-webapp/
 │   │   ├── postgres-pv.yaml      # Persistent Volume for PostgreSQL
 │   │   ├── postgres-pvc.yaml     # Persistent Volume Claim for PostgreSQL
 │   │   ├── postgres-secret.yaml  # Secret configuration for PostgreSQL
+│   │   ├── postgres-configmap.yaml  # Configmap configuration for PostgreSQL
 │   │   ├── postgres-service.yaml # Service for PostgreSQL
 │   │   └── postgres-deployment.yaml  # Deployment for PostgreSQL
 │   ├── storage/                  # Storage-related resources
