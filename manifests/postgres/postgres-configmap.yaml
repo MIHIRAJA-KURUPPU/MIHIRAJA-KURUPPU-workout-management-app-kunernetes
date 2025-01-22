@@ -5,3 +5,4 @@ metadata:
   namespace: workout-app-ns
 data:
   POSTGRES_USER: postgres
+  POSTGRES_DB: workout
