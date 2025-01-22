@@ -55,7 +55,6 @@ metadata:
   name: postgres-secret
 type: opaque
 data:
-  POSTGRES_USER: <base64-encoded-username>
   POSTGRES_PASSWORD: <base64-encoded-password>
 ```
 
@@ -69,6 +68,13 @@ type: opaque
 data:
   DATABASE_URL: <base64-encoded-database-url>
 ```
+
+DATABASE_URL should be in the following format:
+
+```yaml
+postgresql://<username>:<password>@postgres-db:5432/workout
+```
+
 
 #### Generating Base64 Encoded Credentials
 Generate credentials using:
@@ -154,10 +160,43 @@ List all databases:
 \l
 ```
 
-#### Create the `workout` database:
+### Create the `workout` Database (Optional with the PostgreSQL Image Version)
+
 ```sql
 CREATE DATABASE workout;
 ```
+
+#### Additional Notes
+
+##### PostgreSQL 15:
+If you're using the `postgres:15` image, no manual database creation is required. The database will be automatically created based on the environment variables (`POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`) provided in the configuration.
+
+##### PostgreSQL 16.6:
+By default, the `postgres:16.6` image requires manual database creation. In PostgreSQL 16.6, the automatic database creation feature that existed in earlier versions (like `postgres:15`) is no longer enabled by default. This means that, unlike previous versions, the database specified by the `POSTGRES_DB` environment variable won't be created automatically. To handle this, you need to manually create the database by running the SQL command after the container starts.
+
+##### Configure External Connections (Optional)
+
+To ensure proper external connections, you may need to update the configuration files:
+
+1. **Edit `postgresql.conf`**:
+   ```bash
+   sudo nano /etc/postgresql/<version>/main/postgresql.conf
+   ```
+   Uncomment `listen_addresses` and change the value to `*`:
+   ```bash
+   listen_addresses = '*'
+   ```
+   Press `Ctrl+X`, then `Y`, and then `Enter` to save.
+
+2. **Edit `pg_hba.conf`**:
+   ```bash
+   sudo nano /etc/postgresql/<version>/main/pg_hba.conf
+   ```
+   Change the IPV4 local connections address to `0.0.0.0/0`:
+   ```bash
+   host    all             all             0.0.0.0/0            md5
+   ```
+   Press `Ctrl+X`, then `Y`, and then `Enter` to save.
 
 #### Connect to the Database
 Run the following command to connect to the `workout` database:
