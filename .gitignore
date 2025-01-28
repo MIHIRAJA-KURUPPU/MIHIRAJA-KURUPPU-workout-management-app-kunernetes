@@ -9,6 +9,7 @@
 
 # Ignore secret Kubernetes YAML files
 manifests/postgres/postgres-secret.yaml
+manifests/web-app/web-app-secret.yaml
 
 # Ignore compiled output or temporary files
 *.out
