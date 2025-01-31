@@ -228,6 +228,7 @@ kubectl apply -f manifests/storage/image-storage-pvc.yaml
 
 # Apply web app related files
 kubectl apply -f manifests/web-app/web-app-service.yaml
+kubectl apply -f manifests/web-app/web-app-secret.yaml
 kubectl apply -f manifests/web-app/web-app-deployment.yaml
 ```
 
