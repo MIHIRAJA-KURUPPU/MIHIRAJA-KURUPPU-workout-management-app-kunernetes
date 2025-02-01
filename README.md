@@ -1,4 +1,4 @@
-# Setting Up Minikube with PostgreSQL and Web Application
+# Deploying Web Application with Kubernetes using Minikube
 
 This guide provides instructions for setting up a Kubernetes cluster using Minikube, deploying PostgreSQL with persistent storage, and workout management web application.
 
