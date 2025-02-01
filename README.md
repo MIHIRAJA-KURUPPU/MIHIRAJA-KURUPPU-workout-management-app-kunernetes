@@ -42,10 +42,10 @@ The repository includes the following YAML files:
 - `postgres-secret.yaml`
 - `postgres-configmap.yaml`
 - `postgres-service.yaml`
-- `postgres-deployment.yaml`
+- `postgres-statefulset.yaml`
 - `web-app-service.yaml`
 - `web-app-deployment.yaml`
--  web-app-secret.yaml
+- `web-app-secret.yaml`
 
 ### Edit your `postgres-secret.yaml`
 ```yaml
@@ -75,6 +75,7 @@ DATABASE_URL should be in the following format:
 postgresql://<username>:<password>@postgres-db:5432/workout
 ```
 
+Note: Here postgres-db is the postgresql service name.
 
 #### Generating Base64 Encoded Credentials
 Generate credentials using:
@@ -134,7 +135,7 @@ kubectl apply -f manifests/postgres/postgres-pvc.yaml
 kubectl apply -f manifests/postgres/postgres-secret.yaml
 kubectl apply -f manifests/postgres/postgres-configmap.yaml
 kubectl apply -f manifests/postgres/postgres-service.yaml
-kubectl apply -f manifests/postgres/postgres-deployment.yaml
+kubectl apply -f manifests/postgres/postgres-statefulset.yaml
 ```
 
 ## Step 5: Initialize PostgreSQL
@@ -146,7 +147,7 @@ kubectl get pods
 ```
 Access the pod:
 ```bash
-kubectl exec -it postgres-deployment-<pod-id> -- /bin/bash
+kubectl exec -it <postgres-pod-name> -- /bin/bash
 ```
 
 ### Interact with PostgreSQL
@@ -251,6 +252,10 @@ kubectl apply -f manifests/web-app/web-app-deployment.yaml
   ```bash
   kubectl get deployment
   ```
+- Statefulsets:
+  ```bash
+  kubectl get statefulset
+  ```
 - Pods:
   ```bash
   kubectl get pods
@@ -306,14 +311,14 @@ minikube ssh
 sudo su -
 ```
 Paths:
-- **PostgreSQL Data**: `/mnt/data/postgres`
+- **PostgreSQL Data**: `/mnt/data/postgres/exercise_data`
 - **Uploaded Images**: `/mnt/data/uploads`
 
 ---
 
 ## Notes
 
-- The `postgres-deployment` uses one replica to simplify database interactions.
+- The `postgres-statefulset` uses one replica to simplify database interactions.
 - Replace placeholder values (e.g., `<base64-encoded-username>`) with actual credentials.
 - YAML configurations must match your desired resource requirements.
 
@@ -329,7 +334,7 @@ kubernetes-postgres-webapp/
 │   │   ├── postgres-secret.yaml  # Secret configuration for PostgreSQL
 │   │   ├── postgres-configmap.yaml  # Configmap configuration for PostgreSQL
 │   │   ├── postgres-service.yaml # Service for PostgreSQL
-│   │   └── postgres-deployment.yaml  # Deployment for PostgreSQL
+│   │   └── postgres-statefulset.yaml  # Deployment for PostgreSQL
 │   ├── storage/                  # Storage-related resources
 │   │   ├── image-storage-pv.yaml # Persistent Volume for image storage
 │   │   └── image-storage-pvc.yaml # Persistent Volume Claim for image storage
